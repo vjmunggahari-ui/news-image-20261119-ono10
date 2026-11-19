@@ -11,25 +11,23 @@ Entry for the make.fun bounty **[Sum up 19 November's world news in one image](h
 
 ## The image
 
-`entry.png` (1024×1024) is a newspaper front page — **THE WORLD TODAY, Thursday 19 November 2026** — with one hero photograph (Earth at dawn above a storm system, generated with an image model) and eight verified headlines from the day. All text is drawn programmatically, so every word is crisp and legible.
+`entry.png` (1024×1024, 134 KB) is a newspaper front page — **THE WORLD TODAY, Thursday 19 November 2026** — drawn entirely in code: a masthead, a lead story with a drawn Shenzhen dusk scene (skyline under the US, Chinese and Russian flags), two illustrated secondaries, a six-story grid, an "Also today" briefs strip, and a source line. Every word is drawn as vector text, so the page stays crisp and legible at any size.
 
-## The eight stories (all verified against real reporting)
+## The thirteen stories
 
-1. **Culture** — GTA VI launches worldwide after a 13-year wait (Associated Press)
-2. **Middle East** — US and Iran trade fire again as Gulf attacks widen
-3. **Europe** — EU proposes €45bn loan to keep Ukraine funded (Financial Times)
-4. **Space** — Voyager 1 reaches one light-day from Earth (NASA)
-5. **United States** — Democrats nominate Jeffries for Speaker, 251–11 (USA Today)
-6. **Diplomacy** — Trump, Xi and Putin to meet in Shenzhen today (APEC summit)
-7. **Asia** — Cyclone Akvan bears down on India's east coast (The Hindu)
-8. **Technology** — Nvidia halts H-series chip shipments to China
+**Lead — Diplomacy:** Trump, Xi and Putin gather in Shenzhen for trilateral talks at the APEC summit.
 
-Sources for each headline are listed in [SOURCES.md](SOURCES.md).
+**Secondaries:** US and Iran trade fire again as Gulf attacks widen; the Crimean Bridge is attacked again.
+
+**Grid:** the UN court's historic Rohingya genocide verdict on Myanmar; a Van Gogh sells for a record $190.4m; Anthropic raises $81.3bn in the biggest IPO ever; GTA VI arrives at last, 13 years on; Voyager 1 sails one light-day from Earth; Israeli tanks cross the Gaza ceasefire line.
+
+**Also today:** India–Japan 2+2 defence talks; US–Venezuela military ties restored; North Korea fires missiles after US drills; Fed minutes point to further rate hikes.
+
+Every story was verified against real reporting from 19 November 2026; see `SOURCES.md` for the source of each one.
 
 ## How it works
 
-`main.py` copies the bundled `entry.png` to `/output/entry.png`. No network,
-no randomness — running it twice writes identical bytes.
+`main.py` (Python 3.13, standard library only) validates the bundled `entry.png` — PNG signature, chunk stream, trailing IEND, 1024×1024, at most 1 MiB — and copies it byte-for-byte to `/output/entry.png`, then proves the copy by SHA-256. No network, no clock, no randomness: running it twice writes identical bytes.
 
 ```sh
 python3 main.py   # writes /output/entry.png
