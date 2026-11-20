@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""news-image-20261119 entry (v2): deliver the front page to /output/entry.png.
+"""news-image-20261119 entry (v3): deliver the front page to /output/entry.png.
 
 The front page is bundled beside this script as entry.png: a newspaper
-page drawn in-session for Thursday 19 November 2026, carrying thirteen
-verified stories from the day (one lead, two secondaries, six in the grid,
-four briefs) plus a source line. This program never changes the image:
-it checks the bundled file is a complete, well-formed PNG of the size
-the competition allows, copies it byte-for-byte to the output path, and
-then proves the copy matches the source by hash. It uses only the
-standard library, reads no network, clock or random input, and writes
-the same bytes on every run.
+page drawn in-session for Thursday 19 November 2026, carrying twenty
+verified stories from the full day (one lead, three illustrated
+secondaries, eight in the grid, eight briefs) plus a source line.
+This program never changes the image: it checks the bundled file is a
+complete, well-formed PNG of the size the competition allows, copies it
+byte-for-byte to the output path, and then proves the copy matches the
+source by hash. It uses only the standard library, reads no network,
+clock or random input, and writes the same bytes on every run.
 
 Output directory: /output by default, or $MAKEFUN_OUTPUT_DIR when set
 (the kit's local-run convention).
@@ -28,6 +28,7 @@ import os
 import shutil
 import struct
 import sys
+import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOURCE = os.path.join(HERE, "entry.png")
@@ -79,6 +80,12 @@ def check_png(path):
                 raise ValueError("%s: expected 1024x1024, got %dx%d"
                                  % (path, width, height))
             first = False
+        stored_crc, = struct.unpack(">I", data[end - 4:end])
+        actual_crc = zlib.crc32(ctype)
+        actual_crc = zlib.crc32(data[pos + 8:pos + 8 + length], actual_crc)
+        if stored_crc != (actual_crc & 0xFFFFFFFF):
+            raise ValueError("%s: bad CRC in %s chunk at %d"
+                             % (path, ctype.decode("latin-1"), pos))
         if ctype == b"IEND":
             if length != 0:
                 raise ValueError("%s: IEND carries data" % path)

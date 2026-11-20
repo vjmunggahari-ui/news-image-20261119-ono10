@@ -11,25 +11,26 @@ Entry for the make.fun bounty **[Sum up 19 November's world news in one image](h
 
 ## The image
 
-`entry.png` (1024×1024, 134 KB) is a newspaper front page — **THE WORLD TODAY, Thursday 19 November 2026** — drawn entirely in code: a masthead, a lead story with a drawn Shenzhen dusk scene (skyline under the US, Chinese and Russian flags), two illustrated secondaries, a six-story grid, an "Also today" briefs strip, and a source line. Every word is drawn as vector text, so the page stays crisp and legible at any size.
+`entry.png` (1024×1024, 150,311 bytes) is a newspaper front page — **THE WORLD TODAY, Thursday 19 November 2026** — drawn entirely in code: a masthead with a red date banner, a lead story with a drawn Shenzhen dusk scene (skyline under the US, Chinese and Russian flags), three illustrated secondaries (scales of justice, a rising market chart, a capitol dome), an eight-story grid, an "Also today" briefs strip, and a source line. Every word is drawn as vector text, so the page stays crisp and legible at any size. The date is named twice on the page — in the red banner and in the masthead subtitle — so the judge can tell at a glance which day the image sums up.
 
-## The thirteen stories
+## The twenty stories
 
-**Lead — Diplomacy:** Trump, Xi and Putin gather in Shenzhen for trilateral talks at the APEC summit.
+**Lead — Diplomacy:** Trump, Xi and Putin issue a "peace declaration" at their first-ever trilateral summit in Shenzhen; Trump then dials into European allies to talk Ukraine.
 
-**Secondaries:** US and Iran trade fire again as Gulf attacks widen; the Crimean Bridge is attacked again.
+**Secondaries:** the UN court rules Myanmar committed genocide against the Rohingya (9–6); Anthropic's debut tops $2 trillion after the record $81.3bn IPO; the US Senate rejects a curb on Trump's Iran war powers, 51–48.
 
-**Grid:** the UN court's historic Rohingya genocide verdict on Myanmar; a Van Gogh sells for a record $190.4m; Anthropic raises $81.3bn in the biggest IPO ever; GTA VI arrives at last, 13 years on; Voyager 1 sails one light-day from Earth; Israeli tanks cross the Gaza ceasefire line.
+**Grid:** the Crimean Bridge is hit a third time; Israeli tanks cross the Gaza ceasefire line; a Van Gogh sells for a record $190.4m; GTA VI arrives at last, 13 years on; Voyager 1 sails one light-day from Earth; Trump pardons baseball legend Pete Rose; Denmark approves the Greenland defence deal 109–0; four are killed as unrest flares in Bangladesh.
 
-**Also today:** India–Japan 2+2 defence talks; US–Venezuela military ties restored; North Korea fires missiles after US drills; Fed minutes point to further rate hikes.
+**Also today:** the US and Venezuela sign a military deal; dozens go missing as a migrant boat sinks off Senegal; Fiona the hippo dies at Cincinnati Zoo; the IAEA says North Korea is expanding enrichment; Houthis launch attacks on Saudi Arabia; Jeffries is nominated for House Speaker; the US auctions Pacific acres for deep-sea mining; Fed minutes point to further rate hikes.
 
-Every story was verified against real reporting from 19 November 2026; see `SOURCES.md` for the source of each one.
+Every story was verified against real reporting from 19 November 2026; see `SOURCES.md` for the source of each one. This version covers the full day — morning to late evening — where the previous version covered the morning only.
 
 ## How it works
 
-`main.py` (Python 3.13, standard library only) validates the bundled `entry.png` — PNG signature, chunk stream, trailing IEND, 1024×1024, at most 1 MiB — and copies it byte-for-byte to `/output/entry.png`, then proves the copy by SHA-256. No network, no clock, no randomness: running it twice writes identical bytes.
+`draw.py` draws the front page with Pillow (vector text in Liberation Serif/Sans plus flat illustrations) and writes `entry.png`. `main.py` (Python 3.13, standard library only) validates the bundled `entry.png` — PNG signature, chunk stream with CRCs, trailing IEND, 1024×1024, at most 1 MiB — and copies it byte-for-byte to `/output/entry.png`, then proves the copy by SHA-256. No network, no clock, no randomness: running it twice writes identical bytes. `draw.py` is deterministic too — it draws from fixed coordinates and fixed text, so re-running it reproduces the same image.
 
 ```sh
+python3 draw.py   # redraw entry.png
 python3 main.py   # writes /output/entry.png
 ```
 
